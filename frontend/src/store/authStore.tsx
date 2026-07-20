@@ -96,8 +96,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+
         // 1. Call silent refresh using raw axios to avoid interceptor side effects
-        const response = await axios.post('http://localhost:3000/api/v1/auth/refresh', {
+        const response = await axios.post(`${apiBaseUrl}/auth/refresh`, {
           refresh_token: savedRefreshToken,
         });
 
@@ -108,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setTokens(newAccessToken, newRefreshToken);
 
         // 3. Fetch the current user profile
-        const userResponse = await axios.get('http://localhost:3000/api/v1/users/me', {
+        const userResponse = await axios.get(`${apiBaseUrl}/users/me`, {
           headers: {
             Authorization: `Bearer ${newAccessToken}`,
           },
