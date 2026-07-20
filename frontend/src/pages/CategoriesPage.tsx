@@ -1,17 +1,17 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Code, 
-  Server, 
-  Palette, 
-  Database, 
-  ShieldCheck, 
-  Compass, 
-  FileText 
-} from 'lucide-react';
-import { Navbar } from '../components/layout/Navbar';
-import { Footer } from '../components/layout/Footer';
-import api from '../services/api';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Code,
+  Server,
+  Palette,
+  Database,
+  ShieldCheck,
+  Compass,
+  FileText,
+} from "lucide-react";
+import { Navbar } from "../components/layout/Navbar";
+import { Footer } from "../components/layout/Footer";
+import api from "../services/api";
 
 export const CategoriesPage = () => {
   const navigate = useNavigate();
@@ -25,8 +25,8 @@ export const CategoriesPage = () => {
       try {
         setLoading(true);
         const [catRes, postRes] = await Promise.all([
-          api.get('/categories'),
-          api.get('/posts?limit=100')
+          api.get("/categories"),
+          api.get("/posts?limit=100"),
         ]);
 
         if (catRes.data?.success && Array.isArray(catRes.data.data)) {
@@ -41,7 +41,7 @@ export const CategoriesPage = () => {
           setPosts(postRes.data);
         }
       } catch (err) {
-        console.error('Failed to fetch categories/posts:', err);
+        console.error("Failed to fetch categories/posts:", err);
       } finally {
         setLoading(false);
       }
@@ -52,92 +52,94 @@ export const CategoriesPage = () => {
 
   // Map category details automatically
   const getCategoryDetails = (name: string) => {
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    if (slug === 'development') {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    if (slug === "development") {
       return {
         icon: <Code size={36} className="text-blue-500" />,
-        headerBg: 'bg-blue-50',
-        pillBg: 'bg-blue-50 text-blue-600',
-        description: 'Code, frameworks, architecture, and dev tools.',
-        borderColor: 'hover:border-blue-200'
+        headerBg: "bg-blue-50",
+        pillBg: "bg-blue-50 text-blue-600",
+        description: "Code, frameworks, architecture, and dev tools.",
+        borderColor: "hover:border-blue-200",
       };
     }
-    if (slug === 'backend') {
+    if (slug === "backend") {
       return {
         icon: <Server size={36} className="text-emerald-500" />,
-        headerBg: 'bg-emerald-50',
-        pillBg: 'bg-emerald-50 text-emerald-600',
-        description: 'APIs, databases, auth, and server-side logic.',
-        borderColor: 'hover:border-emerald-200'
+        headerBg: "bg-emerald-50",
+        pillBg: "bg-emerald-50 text-emerald-600",
+        description: "APIs, databases, auth, and server-side logic.",
+        borderColor: "hover:border-emerald-200",
       };
     }
-    if (slug === 'design') {
+    if (slug === "design") {
       return {
         icon: <Palette size={36} className="text-amber-500" />,
-        headerBg: 'bg-amber-50',
-        pillBg: 'bg-amber-50 text-amber-600',
-        description: 'UI/UX, components, typography, and layout.',
-        borderColor: 'hover:border-amber-200'
+        headerBg: "bg-amber-50",
+        pillBg: "bg-amber-50 text-amber-600",
+        description: "UI/UX, components, typography, and layout.",
+        borderColor: "hover:border-amber-200",
       };
     }
-    if (slug === 'database' || slug === 'db') {
+    if (slug === "database" || slug === "db") {
       return {
         icon: <Database size={36} className="text-purple-500" />,
-        headerBg: 'bg-purple-50',
-        pillBg: 'bg-purple-50 text-purple-600',
-        description: 'SQL, TypeORM, migrations, and data modeling.',
-        borderColor: 'hover:border-purple-200'
+        headerBg: "bg-purple-50",
+        pillBg: "bg-purple-50 text-purple-600",
+        description: "SQL, TypeORM, migrations, and data modeling.",
+        borderColor: "hover:border-purple-200",
       };
     }
-    if (slug === 'security') {
+    if (slug === "security") {
       return {
         icon: <ShieldCheck size={36} className="text-pink-500" />,
-        headerBg: 'bg-pink-50',
-        pillBg: 'bg-pink-50 text-pink-600',
-        description: 'JWT, bcrypt, guards, and best practices.',
-        borderColor: 'hover:border-pink-200'
+        headerBg: "bg-pink-50",
+        pillBg: "bg-pink-50 text-pink-600",
+        description: "JWT, bcrypt, guards, and best practices.",
+        borderColor: "hover:border-pink-200",
       };
     }
-    if (slug === 'devlog' || slug === 'technology') {
+    if (slug === "devlog" || slug === "technology") {
       return {
         icon: <Code size={36} className="text-cyan-500" />,
-        headerBg: 'bg-cyan-50',
-        pillBg: 'bg-cyan-50 text-cyan-600',
-        description: 'Project journals, lessons learned, and stories.',
-        borderColor: 'hover:border-cyan-200'
+        headerBg: "bg-cyan-50",
+        pillBg: "bg-cyan-50 text-cyan-600",
+        description: "Project journals, lessons learned, and stories.",
+        borderColor: "hover:border-cyan-200",
       };
     }
-    if (slug === 'lifestyle') {
+    if (slug === "lifestyle") {
       return {
         icon: <Compass size={36} className="text-rose-500" />,
-        headerBg: 'bg-rose-50',
-        pillBg: 'bg-rose-50 text-rose-600',
-        description: 'Personal growth, productivity, and balanced living.',
-        borderColor: 'hover:border-rose-200'
+        headerBg: "bg-rose-50",
+        pillBg: "bg-rose-50 text-rose-600",
+        description: "Personal growth, productivity, and balanced living.",
+        borderColor: "hover:border-rose-200",
       };
     }
-    if (slug === 'business') {
+    if (slug === "business") {
       return {
         icon: <Server size={36} className="text-orange-500" />,
-        headerBg: 'bg-orange-50',
-        pillBg: 'bg-orange-50 text-orange-600',
-        description: 'Industry insights, startups, and career growth.',
-        borderColor: 'hover:border-orange-200'
+        headerBg: "bg-orange-50",
+        pillBg: "bg-orange-50 text-orange-600",
+        description: "Industry insights, startups, and career growth.",
+        borderColor: "hover:border-orange-200",
       };
     }
     return {
       icon: <FileText size={36} className="text-slate-500" />,
-      headerBg: 'bg-slate-50',
-      pillBg: 'bg-slate-50 text-slate-600',
-      description: 'Explore the articles and stories in this category.',
-      borderColor: 'hover:border-slate-200'
+      headerBg: "bg-slate-50",
+      pillBg: "bg-slate-50 text-slate-600",
+      description: "Explore the articles and stories in this category.",
+      borderColor: "hover:border-slate-200",
     };
   };
 
   // Compute actual counts dynamically
   const getPostCount = (categorySlug: string) => {
-    return posts.filter(post => 
-      post.categories?.some((c: any) => c.slug.toLowerCase() === categorySlug.toLowerCase())
+    return posts.filter((post) =>
+      post.categories?.some(
+        (c: any) => c.slug.toLowerCase() === categorySlug.toLowerCase(),
+      ),
     ).length;
   };
 
@@ -179,7 +181,9 @@ export const CategoriesPage = () => {
                   className={`group bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col h-[280px] ${details.borderColor}`}
                 >
                   {/* Top Colored Header Section */}
-                  <div className={`h-[100px] w-full flex items-center justify-center transition-colors duration-200 ${details.headerBg} group-hover:opacity-90`}>
+                  <div
+                    className={`h-[100px] w-full flex items-center justify-center transition-colors duration-200 ${details.headerBg} group-hover:opacity-90`}
+                  >
                     {details.icon}
                   </div>
 
@@ -191,7 +195,9 @@ export const CategoriesPage = () => {
                     <p className="text-[13px] text-slate-500 leading-relaxed mb-4 flex-1 line-clamp-2">
                       {cat.description || details.description}
                     </p>
-                    <div className={`px-3.5 py-1 text-[11px] font-bold rounded-full w-fit ${details.pillBg}`}>
+                    <div
+                      className={`px-3.5 py-1 text-[11px] font-bold rounded-full w-fit ${details.pillBg}`}
+                    >
                       {postCount} posts
                     </div>
                   </div>

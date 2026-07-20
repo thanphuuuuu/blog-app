@@ -1,5 +1,3 @@
-# README.md
-
 # Blog App Fullstack Project
 
 ---

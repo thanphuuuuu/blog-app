@@ -33,12 +33,9 @@ export const EditPostPage = () => {
         
         // 1. Fetch available categories
         const catRes = await api.get('/categories');
-        let categoriesList: Category[] = [];
         if (catRes.data?.success && Array.isArray(catRes.data.data)) {
-          categoriesList = catRes.data.data;
           setAvailableCategories(catRes.data.data);
         } else if (Array.isArray(catRes.data)) {
-          categoriesList = catRes.data;
           setAvailableCategories(catRes.data);
         }
 
