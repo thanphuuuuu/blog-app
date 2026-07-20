@@ -26,18 +26,31 @@ import { LikesModule } from './likes/likes.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true, // Tự động load các entity được đăng ký ở feature module
-        synchronize: configService.get<string>('NODE_ENV') !== 'production',
-        // LƯU Ý: synchronize=true chỉ dùng cho môi trường dev local để tự động tạo bảng.
-        // Tuyệt đối không bật ở production theo đúng rule dự án.
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            autoLoadEntities: true,
+            synchronize: configService.get<string>('NODE_ENV') !== 'production',
+            ssl: {
+              rejectUnauthorized: false, // Bắt buộc khi sử dụng Neon / Supabase Cloud PostgreSQL
+            },
+          };
+        }
+
+        return {
+          type: 'postgres',
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_NAME'),
+          autoLoadEntities: true,
+          synchronize: configService.get<string>('NODE_ENV') !== 'production',
+        };
+      },
     }),
   ],
   controllers: [],
