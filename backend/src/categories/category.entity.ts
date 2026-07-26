@@ -3,7 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  ManyToMany,
 } from 'typeorm';
+import { Post } from '../posts/post.entity';
 
 @Entity('categories')
 export class Category {
@@ -21,4 +23,7 @@ export class Category {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @ManyToMany(() => Post, (post) => post.categories)
+  posts: Post[];
 }

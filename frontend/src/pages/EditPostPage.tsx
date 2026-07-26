@@ -25,6 +25,11 @@ export const EditPostPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Quick category creation states
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const [creatingCategory, setCreatingCategory] = useState(false);
+
   // Fetch categories and post data on load
   useEffect(() => {
     const loadData = async () => {
@@ -119,6 +124,25 @@ export const EditPostPage = () => {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const handleQuickAddCategory = async () => {
+    if (!newCatName.trim()) return;
+    try {
+      setCreatingCategory(true);
+      const res = await api.post('/categories', { name: newCatName.trim() });
+      const created = res.data?.data || res.data;
+      if (created && created.id) {
+        setAvailableCategories((prev) => [...prev, created]);
+        setSelectedCategoryId(created.id);
+      }
+      setNewCatName('');
+      setIsAddingCategory(false);
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Không thể tạo thể loại mới');
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
+
   const handleSubmit = async (isPublished: boolean) => {
     if (!post || !title.trim() || !content.trim()) return;
 
@@ -129,7 +153,7 @@ export const EditPostPage = () => {
         title,
         content,
         excerpt: content.substring(0, 150),
-        cover_image: coverImageBase64 || null, // send null if cover was removed
+        cover_image: coverImageBase64 || null,
         is_published: isPublished,
         category_ids: selectedCategoryId ? [selectedCategoryId] : [],
       };
@@ -166,79 +190,135 @@ export const EditPostPage = () => {
       <Navbar />
 
       <main className="flex-1 w-full max-w-[800px] mx-auto px-4 py-8 md:py-12 flex flex-col">
-        {/* Title Input */}
+        {/* 1. Title Input (Top) */}
         <input
           type="text"
-          placeholder="Enter post title..."
+          placeholder="Tiêu đề bài viết..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full text-[32px] md:text-[40px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none bg-transparent mb-6"
         />
 
-        {/* Category & Cover Image */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {/* Category Dropdown */}
-          <select
-            value={selectedCategoryId}
-            onChange={(e) => setSelectedCategoryId(e.target.value)}
-            className="flex-1 border border-slate-200 rounded-lg px-4 py-2 text-[14px] focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-all bg-white text-slate-700"
-          >
-            <option value="">Select a Category</option>
-            {availableCategories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-
-          {/* File Picker */}
-          <div className="flex-1">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-              id="cover-image-input"
-            />
-
-            {coverImagePreview ? (
-              <div className="relative w-full h-[42px] rounded-lg overflow-hidden border border-slate-200 group">
-                <img
-                  src={coverImagePreview}
-                  alt="Cover preview"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                  <span className="text-white text-[12px] font-medium">Cover image selected</span>
-                  <button
-                    onClick={handleRemoveCover}
-                    className="text-white hover:text-red-300 transition-colors"
-                    title="Remove image"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <label
-                htmlFor="cover-image-input"
-                className="flex items-center gap-2 w-full h-[42px] border border-dashed border-slate-300 rounded-lg px-4 text-[14px] text-slate-500 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50/50 cursor-pointer transition-all duration-150"
+        {/* 2. Category Selection (Next) */}
+        <div className="w-full mb-6">
+          <label className="block text-[13px] font-semibold text-slate-600 mb-2">
+            Thể loại bài viết <span className="text-red-500">*</span>
+          </label>
+          {isAddingCategory ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Tên thể loại mới..."
+                value={newCatName}
+                onChange={(e) => setNewCatName(e.target.value)}
+                className="flex-1 border border-blue-500 rounded-xl px-4 py-2.5 text-[14px] focus:outline-none ring-2 ring-blue-500/10"
+                autoFocus
+              />
+              <Button
+                variant="primary"
+                onClick={handleQuickAddCategory}
+                loading={creatingCategory}
+                disabled={!newCatName.trim() || creatingCategory}
+                className="px-4 py-2.5 text-[13px] rounded-xl"
               >
-                <ImageIcon size={15} />
-                <span>Choose cover image...</span>
-                <Upload size={14} className="ml-auto text-slate-400" />
-              </label>
-            )}
-          </div>
+                Lưu
+              </Button>
+              <button
+                type="button"
+                onClick={() => setIsAddingCategory(false)}
+                className="p-2 text-slate-400 hover:text-slate-600"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          ) : (
+            <select
+              value={selectedCategoryId}
+              onChange={(e) => {
+                if (e.target.value === '__NEW__') {
+                  setIsAddingCategory(true);
+                } else {
+                  setSelectedCategoryId(e.target.value);
+                }
+              }}
+              className="w-full border border-slate-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-all bg-white text-slate-700 shadow-sm"
+            >
+              <option value="">-- Chọn thể loại bài viết --</option>
+              {availableCategories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+              <option value="__NEW__">+ Thêm thể loại mới...</option>
+            </select>
+          )}
         </div>
 
-        {/* Editor Area */}
+        {/* 3. Cover Image Selection (Next - Large vertical preview box) */}
+        <div className="w-full mb-8">
+          <label className="block text-[13px] font-semibold text-slate-600 mb-2">
+            Ảnh bìa bài viết (Cover Image)
+          </label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+            id="cover-image-input"
+          />
+
+          {coverImagePreview ? (
+            <div className="relative w-full min-h-[220px] max-h-[360px] rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 group flex items-center justify-center">
+              <img
+                src={coverImagePreview}
+                alt="Cover preview"
+                className="w-full h-full max-h-[360px] object-cover rounded-2xl"
+              />
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <label
+                  htmlFor="cover-image-input"
+                  className="px-4 py-2 bg-white/90 hover:bg-white text-slate-800 text-[13px] font-semibold rounded-full cursor-pointer transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <Upload size={15} />
+                  <span>Đổi ảnh khác</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={handleRemoveCover}
+                  className="px-4 py-2 bg-red-600/90 hover:bg-red-600 text-white text-[13px] font-semibold rounded-full transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <X size={15} />
+                  <span>Xóa ảnh</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <label
+              htmlFor="cover-image-input"
+              className="flex flex-col items-center justify-center gap-2 w-full h-[180px] border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl bg-slate-50/50 hover:bg-blue-50/30 cursor-pointer transition-all duration-200 text-center p-6 group"
+            >
+              <div className="p-3.5 bg-white rounded-full shadow-sm border border-slate-100 group-hover:scale-110 transition-transform duration-200">
+                <ImageIcon size={28} className="text-blue-500" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[14px] font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">
+                  Tải lên ảnh bìa cho bài viết
+                </p>
+                <p className="text-[12px] text-slate-400">
+                  Hỗ trợ PNG, JPG, JPEG, WEBP (Tự động nén ảnh tối ưu)
+                </p>
+              </div>
+            </label>
+          )}
+        </div>
+
+        {/* 4. Editor Area */}
         <Textarea
-          placeholder="Write your story here..."
+          placeholder="Nội dung bài viết..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="flex-1 min-h-[400px] text-[16px] leading-[1.8] border-none focus:ring-0 p-0 resize-y mb-8"
+          className="flex-1 min-h-[350px] text-[16px] leading-[1.8] border-none focus:ring-0 p-0 resize-y mb-8"
         />
 
         {/* Actions */}
@@ -248,7 +328,7 @@ export const EditPostPage = () => {
             onClick={() => handleSubmit(false)}
             disabled={isSubmitting || !title || !content}
           >
-            Save Draft
+            Lưu bản nháp
           </Button>
           <Button
             variant="primary"
@@ -256,7 +336,7 @@ export const EditPostPage = () => {
             loading={isSubmitting}
             disabled={!title || !content}
           >
-            Publish Updates
+            Cập nhật bài viết
           </Button>
         </div>
       </main>

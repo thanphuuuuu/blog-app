@@ -144,7 +144,7 @@ export const HomePage = () => {
               }}
               className={`whitespace-nowrap px-4 py-2 rounded-full text-[14px] font-medium transition-all duration-200 ${
                 !selectedCategory
-                  ? "bg-slate-900 text-white"
+                  ? "bg-black text-white shadow-sm"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
@@ -159,7 +159,7 @@ export const HomePage = () => {
                 }}
                 className={`whitespace-nowrap px-4 py-2 rounded-full text-[14px] font-medium transition-all duration-200 ${
                   selectedCategory?.toLowerCase() === cat.slug.toLowerCase()
-                    ? "bg-slate-900 text-white"
+                    ? "bg-black text-white shadow-sm"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >

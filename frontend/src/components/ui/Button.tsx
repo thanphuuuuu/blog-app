@@ -20,9 +20,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           'focus:outline-none focus:ring-2 focus:ring-offset-2',
           
           // Variants
-          variant === 'primary' && 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600',
+          variant === 'primary' && 'bg-black text-white hover:bg-slate-800 focus:ring-slate-900',
           variant === 'ghost' && 'bg-transparent text-slate-500 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-400',
-          variant === 'danger' && 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
+          variant === 'danger' && 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-600',
+
           
           // Sizes
           size === 'sm' && 'px-3 py-1.5 text-xs rounded-md',

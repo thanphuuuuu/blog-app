@@ -57,13 +57,14 @@ export class Post {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @ManyToMany(() => Category)
+  @ManyToMany(() => Category, (category) => category.posts)
   @JoinTable({
     name: 'post_categories',
     joinColumn: { name: 'post_id' },
     inverseJoinColumn: { name: 'category_id' },
   })
   categories: Category[];
+
 
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];

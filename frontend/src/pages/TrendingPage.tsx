@@ -251,7 +251,7 @@ export const TrendingPage = () => {
               }}
               className={`whitespace-nowrap px-4 py-1.5 rounded-full text-[13px] font-semibold border transition-all duration-150 ${
                 selectedCategory === cat.slug && !searchTag
-                  ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                  ? "bg-black text-white border-black shadow-sm"
                   : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300"
               }`}
             >
@@ -261,11 +261,12 @@ export const TrendingPage = () => {
           {searchTag && (
             <button
               onClick={() => setSearchTag(undefined)}
-              className="whitespace-nowrap px-4 py-1.5 rounded-full text-[13px] font-semibold bg-blue-600 text-white border-blue-600 shadow-sm flex items-center gap-1.5"
+              className="whitespace-nowrap px-4 py-1.5 rounded-full text-[13px] font-semibold bg-black text-white border-black shadow-sm flex items-center gap-1.5"
             >
               #{searchTag} <span className="text-[10px] opacity-75">✕</span>
             </button>
           )}
+
         </div>
 
         {/* Main Layout Grid */}
@@ -451,9 +452,10 @@ export const TrendingPage = () => {
                       onClick={() => setSearchTag(tag)}
                       className={`px-3 py-1 rounded-lg text-[12px] font-semibold transition-all duration-150 ${
                         searchTag === tag
-                          ? "bg-blue-600 text-white"
+                          ? "bg-black text-white shadow-sm"
                           : "bg-slate-50 text-slate-600 border border-slate-100 hover:bg-slate-100 hover:border-slate-200"
                       }`}
+
                     >
                       #{tag}
                     </button>
