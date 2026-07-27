@@ -9,7 +9,7 @@ import { Textarea } from '../components/ui/Textarea';
 import { postService } from '../services/postService';
 import api from '../services/api';
 import type { Post, Comment } from '../types/post.types';
-import { formatDate, calcReadTime } from '../utils/format';
+import { formatDate } from '../utils/format';
 import { Badge } from '../components/ui/Badge';
 import { useAuth } from '../hooks/useAuth';
 

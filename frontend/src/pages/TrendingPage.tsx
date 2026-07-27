@@ -16,7 +16,7 @@ import {
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { usePosts } from "../hooks/usePosts";
-import { formatDate, calcReadTime } from "../utils/format";
+import { formatDate } from "../utils/format";
 import api from "../services/api";
 
 type Timeframe = "week" | "month" | "all";
