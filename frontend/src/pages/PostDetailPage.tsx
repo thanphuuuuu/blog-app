@@ -217,7 +217,7 @@ export const PostDetailPage = () => {
             <div>
               <div className="text-[15px] font-medium text-slate-900">{post.author.username}</div>
               <div className="text-[13px] text-slate-500">
-                {formatDate(post.created_at)} · {calcReadTime(post.content)}
+                {formatDate(post.created_at)}
               </div>
             </div>
           </div>

@@ -338,8 +338,6 @@ export const TrendingPage = () => {
                         </span>
                         <span>·</span>
                         <span>{formatDate(post.created_at)}</span>
-                        <span>·</span>
-                        <span>{calcReadTime(post.content)}</span>
                       </div>
                     </div>
 

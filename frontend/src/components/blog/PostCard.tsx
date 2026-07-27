@@ -2,7 +2,7 @@ import { Image as ImageIcon, User as UserIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { Post } from '../../types/post.types';
 import { Badge } from '../ui/Badge';
-import { formatDate, calcReadTime } from '../../utils/format';
+import { formatDate } from '../../utils/format';
 
 interface PostCardProps {
   post: Post;
@@ -10,7 +10,6 @@ interface PostCardProps {
 
 export const PostCard = ({ post }: PostCardProps) => {
   const primaryCategory = post.categories?.[0];
-  const readTime = calcReadTime(post.content);
 
   return (
     <Link
@@ -70,11 +69,9 @@ export const PostCard = ({ post }: PostCardProps) => {
             </span>
           </div>
 
-          {/* Meta (Date & Read Time) */}
-          <div className="text-[11px] text-slate-400 flex items-center shrink-0">
+          {/* Meta (Date) */}
+          <div className="text-[11px] text-slate-400 shrink-0">
             {formatDate(post.created_at)}
-            <span className="mx-1">·</span>
-            {readTime}
           </div>
         </div>
       </div>
